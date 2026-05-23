@@ -1,60 +1,130 @@
-# TpWebservice6041
+# TP Webservice — Consumo de APIs externas
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.10.
+Aplicación web desarrollada como trabajo práctico universitario. Consume 5 APIs externas distintas, cada una presentada en su propia sección de la app.
 
-## Development server
+---
 
-To start a local development server, run:
+## Tecnologías utilizadas
 
-```bash
-ng serve
+| Tecnología | Versión | Rol |
+|---|---|---|
+| [Angular](https://angular.dev) | 21.2 | Framework principal (standalone components, signals, lazy loading) |
+| [TypeScript](https://www.typescriptlang.org) | 5.9 | Lenguaje base |
+| [Tailwind CSS](https://tailwindcss.com) | 4.1 | Estilos utilitarios |
+| [Spartan UI](https://www.spartan.ng) | alpha.697 | Componentes UI (Button, Input, Badge, Sheet) |
+| [ng-icons / Lucide](https://ng-icons.github.io/ng-icons) | 32+ | Íconos vectoriales |
+| [RxJS](https://rxjs.dev) | 7.8 | Manejo de observables y llamadas HTTP |
+| [Angular CDK](https://material.angular.io/cdk) | 21 | Portal y primitivas de UI |
+
+---
+
+## APIs consumidas
+
+| Sección | API | Descripción |
+|---|---|---|
+| **Películas** | [IMDB Top 100 Movies](https://rapidapi.com/rapihub-rapihub-default/api/imdb-top-100-movies) — RapidAPI | Listado de las 100 mejores películas según IMDB |
+| **Autos** | [Car Specs](https://rapidapi.com/alekivanovski96-O1vKHrFskQm/api/car-specs) — RapidAPI | Marcas de autos y sus modelos disponibles |
+| **Conversor** | [Currency Data](https://apilayer.com/marketplace/currency_data-api) — APILayer | Conversión de montos entre divisas en tiempo real |
+| **Audio** | [OpenAI Text to Speech](https://rapidapi.com/swift-api-swift-api-default/api/open-ai-text-to-speech1) — RapidAPI | Conversión de texto a voz con distintas voces e idiomas |
+| **Clima** | [Open-Meteo](https://open-meteo.com) — Gratuita, sin clave | Clima actual de cualquier ciudad del mundo |
+
+---
+
+## Estructura del proyecto
+
+```
+src/
+├── app/
+│   ├── navbar/              # Barra de navegación responsiva
+│   ├── pages/
+│   │   ├── peliculas/       # Página de películas
+│   │   ├── autos/           # Página de marcas y modelos de autos
+│   │   ├── conversor/       # Página de conversión de monedas
+│   │   ├── audio/           # Página de texto a audio
+│   │   └── otra-api/        # Página del clima
+│   ├── services/            # Servicios HTTP (uno por API)
+│   └── models/              # Interfaces TypeScript por API
+├── environments/
+│   └── environment.ts       # API keys centralizadas
+└── libs/                    # Componentes Spartan UI (helm layer)
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## Configuración de API keys
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Todas las claves están centralizadas en [`src/environments/environment.ts`](src/environments/environment.ts):
 
-```bash
-ng generate component component-name
+```ts
+export const environment = {
+  rapidApiKey: 'TU_RAPIDAPI_KEY',   // clave compartida para todas las APIs de RapidAPI
+  imdbHost:    'imdb-top-100-movies.p.rapidapi.com',
+  carsHost:    'car-specs.p.rapidapi.com',
+  audioHost:   'open-ai-text-to-speech1.p.rapidapi.com',
+  apiLayerKey: 'TU_APILAYER_KEY',   // clave para APILayer (conversor de monedas)
+};
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+> Las APIs de RapidAPI comparten una única clave. Open-Meteo es completamente gratuita y no requiere clave.
+
+---
+
+## Requisitos previos
+
+- [Node.js](https://nodejs.org) 18 o superior
+- [npm](https://www.npmjs.com) 10 o superior
+- Angular CLI instalado globalmente (opcional):
+  ```bash
+  npm install -g @angular/cli
+  ```
+
+---
+
+## Instalación y uso
+
+### 1. Clonar el repositorio
 
 ```bash
-ng generate --help
+git clone <url-del-repositorio>
+cd tp-webservice-6041
 ```
 
-## Building
-
-To build the project run:
+### 2. Instalar dependencias
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### 3. Configurar las API keys
 
-## Running unit tests
+Editar el archivo `src/environments/environment.ts` y reemplazar los valores con tus claves reales:
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+- **RapidAPI key**: obtenerla en [rapidapi.com](https://rapidapi.com) → suscribirse a cada API mencionada arriba
+- **APILayer key**: obtenerla en [apilayer.com](https://apilayer.com) → suscribirse a Currency Data API
+
+### 4. Levantar el servidor de desarrollo
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+La app estará disponible en `http://localhost:4200`.
 
-For end-to-end (e2e) testing, run:
+### 5. Build para producción
 
 ```bash
-ng e2e
+npm run build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Los archivos compilados se generan en el directorio `dist/`.
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# tp-webservice-6041
+## Scripts disponibles
+
+| Comando | Descripción |
+|---|---|
+| `npm start` | Inicia el servidor de desarrollo en `localhost:4200` |
+| `npm run build` | Compila la app para producción |
+| `npm run watch` | Compila en modo watch (desarrollo) |
+| `npm test` | Ejecuta los tests con Vitest |
