@@ -1,0 +1,111 @@
+<div class="mx-auto max-w-2xl px-4 py-10">
+
+  <!-- Header -->
+  <div class="mb-8 text-center">
+    <h1 class="text-3xl font-bold text-foreground">Clima en tiempo real</h1>
+    <p class="mt-1 text-muted-foreground">Buscá el clima actual de cualquier ciudad del mundo</p>
+  </div>
+
+  <!-- Buscador -->
+  <div class="flex gap-2 mb-6">
+    <input
+      hlmInput
+      type="text"
+      [(ngModel)]="cityInput"
+      (keydown.enter)="search()"
+      placeholder="Ej: Buenos Aires, Madrid, Tokyo..."
+      class="flex-1"
+    />
+    <button hlmBtn (click)="search()" [disabled]="loading()">
+      @if (loading()) {
+        <ng-icon hlm name="lucideLoader" size="sm" class="animate-spin" />
+      } @else {
+        <ng-icon hlm name="lucideSearch" size="sm" />
+      }
+    </button>
+  </div>
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+      {{ error() }}
+    </div>
+  }
+
+  <!-- Tarjeta del clima -->
+  @if (weather(); as w) {
+    @let wmo = getWmo(w.current.weather_code);
+    @let loc = location()!;
+
+    <div class="overflow-hidden rounded-2xl shadow-lg border border-border">
+
+      <!-- Banner con gradiente según el clima -->
+      <div class="bg-linear-to-br {{ wmo.bg }} p-6 text-white">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <ng-icon hlm name="lucideMapPin" size="sm" />
+              <span class="font-semibold text-lg">{{ loc.name }}</span>
+              @if (loc.admin1) { <span class="opacity-80 text-sm">{{ loc.admin1 }},</span> }
+              <span class="opacity-80 text-sm">{{ loc.country }}</span>
+            </div>
+            <p class="text-sm opacity-75">{{ loc.timezone }}</p>
+          </div>
+          <span class="text-5xl">{{ wmo.emoji }}</span>
+        </div>
+
+        <!-- Temperatura principal -->
+        <div class="mt-4 flex items-end gap-3">
+          <span class="text-7xl font-thin leading-none">
+            {{ w.current.temperature_2m | number:'1.0-1' }}°C
+          </span>
+        </div>
+        <p class="mt-1 text-lg font-medium">{{ wmo.desc }}</p>
+        <p class="text-sm opacity-80 mt-0.5">
+          Sensación térmica {{ w.current.apparent_temperature | number:'1.0-1' }}°C
+        </p>
+      </div>
+
+      <!-- Stats -->
+      <div class="bg-card grid grid-cols-3 divide-x divide-border">
+
+        <div class="flex flex-col items-center gap-1 py-5">
+          <ng-icon hlm name="lucideDroplets" size="base" class="text-sky-500" />
+          <span class="text-2xl font-semibold text-foreground">
+            {{ w.current.relative_humidity_2m }}%
+          </span>
+          <span class="text-xs text-muted-foreground">Humedad</span>
+        </div>
+
+        <div class="flex flex-col items-center gap-1 py-5">
+          <ng-icon hlm name="lucideWind" size="base" class="text-teal-500" />
+          <span class="text-2xl font-semibold text-foreground">
+            {{ w.current.wind_speed_10m | number:'1.0-1' }}
+          </span>
+          <span class="text-xs text-muted-foreground">km/h Viento</span>
+        </div>
+
+        <div class="flex flex-col items-center gap-1 py-5">
+          <ng-icon hlm name="lucideThermometer" size="base" class="text-orange-500" />
+          <span class="text-2xl font-semibold text-foreground">
+            {{ w.current.apparent_temperature | number:'1.0-1' }}°C
+          </span>
+          <span class="text-xs text-muted-foreground">Sensación</span>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="bg-muted/40 border-t border-border px-4 py-2 flex items-center justify-between">
+        <span class="text-xs text-muted-foreground">
+          Actualizado: {{ formatTime(w.current.time) }}
+        </span>
+        <button hlmBtn variant="ghost" size="icon" (click)="search()" title="Actualizar">
+          <ng-icon hlm name="lucideRefreshCw" size="sm" />
+        </button>
+      </div>
+
+    </div>
+  }
+
+</div>

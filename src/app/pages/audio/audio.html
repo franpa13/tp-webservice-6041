@@ -1,0 +1,111 @@
+<div class="mx-auto max-w-2xl px-4 py-10">
+
+  <!-- Header -->
+  <div class="mb-8 text-center">
+    <h1 class="text-3xl font-bold text-foreground">Texto a Audio</h1>
+    <p class="mt-1 text-muted-foreground">Convertí texto en voz usando inteligencia artificial</p>
+  </div>
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="mb-6 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+      {{ error() }}
+    </div>
+  }
+
+  <div class="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-5">
+
+    <!-- Idioma -->
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-foreground">Idioma</label>
+      <select
+        [(ngModel)]="selectedLang"
+        (ngModelChange)="onLangChange()"
+        class="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        @for (lang of languages; track lang.code) {
+          <option [value]="lang.code">{{ lang.label }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Voz -->
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-foreground">Voz</label>
+      <div class="grid grid-cols-3 gap-2">
+        @for (voice of voices; track voice.value) {
+          <button
+            hlmBtn
+            [variant]="selectedVoice === voice.value ? 'default' : 'outline'"
+            (click)="selectedVoice = voice.value; hasAudio.set(false)"
+            class="flex flex-col items-center gap-0.5 h-auto py-2"
+          >
+            <span class="text-sm font-medium">{{ voice.label }}</span>
+            <span class="text-xs opacity-70">{{ voice.desc }}</span>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Texto -->
+    <div>
+      <label class="mb-1.5 block text-sm font-medium text-foreground">
+        Texto
+        <span class="ml-2 font-normal text-muted-foreground">({{ text.length }} caracteres)</span>
+      </label>
+      <textarea
+        [(ngModel)]="text"
+        (ngModelChange)="hasAudio.set(false)"
+        rows="5"
+        placeholder="Escribí el texto a convertir en audio..."
+        class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+      ></textarea>
+    </div>
+
+    <!-- Botón generar -->
+    <button
+      hlmBtn
+      class="w-full"
+      (click)="generate()"
+      [disabled]="loading() || !text.trim()"
+    >
+      @if (loading()) {
+        <ng-icon hlm name="lucideLoader" size="sm" class="animate-spin" />
+        Generando audio...
+      } @else {
+        <ng-icon hlm name="lucideMic" size="sm" />
+        Generar Audio
+      }
+    </button>
+
+  </div>
+
+  <!-- Reproductor de audio -->
+  @if (hasAudio()) {
+    <div class="mt-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+          <ng-icon hlm name="lucideVolume2" size="base" class="text-primary" />
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-foreground">Audio generado</p>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span hlmBadge variant="secondary">{{ selectedVoice }}</span>
+            <span hlmBadge variant="outline">{{ getLangLabel() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Etiqueta MEDIA — src se asigna por ViewChild para evitar bloqueo del sanitizer -->
+      <audio
+        #audioPlayer
+        controls
+        autoplay
+        class="w-full"
+      >
+        Tu navegador no soporta el elemento de audio.
+      </audio>
+    </div>
+  }
+
+</div>

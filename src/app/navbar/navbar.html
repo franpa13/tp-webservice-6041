@@ -1,0 +1,57 @@
+<header class="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur">
+  <div class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+
+    <!-- Logo -->
+    <a routerLink="/" class="flex items-center gap-2 font-semibold text-foreground">
+      <ng-icon hlm name="lucideLayoutGrid" size="base" />
+      <span>MiApp</span>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center gap-1">
+      @for (link of links; track link.path) {
+        <a
+          [routerLink]="link.path"
+          routerLinkActive="bg-muted text-foreground font-medium"
+          class="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        >
+          <ng-icon hlm [name]="link.icon" size="sm" />
+          {{ link.label }}
+        </a>
+      }
+    </nav>
+
+    <!-- Mobile: hamburger button -->
+    <button
+      hlmBtn
+      variant="ghost"
+      size="icon"
+      class="md:hidden"
+      (click)="toggleMenu()"
+      aria-label="Toggle menu"
+    >
+      @if (menuOpen()) {
+        <ng-icon hlm name="lucideX" size="base" />
+      } @else {
+        <ng-icon hlm name="lucideMenu" size="base" />
+      }
+    </button>
+  </div>
+
+  <!-- Mobile dropdown menu -->
+  @if (menuOpen()) {
+    <nav class="border-t border-border bg-background px-4 py-3 md:hidden flex flex-col gap-1">
+      @for (link of links; track link.path) {
+        <a
+          [routerLink]="link.path"
+          routerLinkActive="bg-muted text-foreground font-medium"
+          (click)="closeMenu()"
+          class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        >
+          <ng-icon hlm [name]="link.icon" size="sm" />
+          {{ link.label }}
+        </a>
+      }
+    </nav>
+  }
+</header>

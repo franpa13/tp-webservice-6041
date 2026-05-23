@@ -1,0 +1,103 @@
+<div class="mx-auto max-w-7xl px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-foreground">Marcas de Autos</h1>
+    <p class="text-muted-foreground mt-1">Seleccioná una marca para ver sus modelos</p>
+  </div>
+
+  <!-- Loading skeleton -->
+  @if (loadingMakes()) {
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+      @for (i of [1,2,3,4,5,6,7,8,9,10,11,12]; track i) {
+        <div class="animate-pulse h-20 rounded-xl bg-muted"></div>
+      }
+    </div>
+  }
+
+  <!-- Error -->
+  @if (errorMakes()) {
+    <div class="rounded-xl border border-destructive/30 bg-destructive/10 px-6 py-8 text-center">
+      <p class="text-lg font-semibold text-destructive">Error al cargar marcas</p>
+      <p class="mt-1 text-sm text-muted-foreground">{{ errorMakes() }}</p>
+    </div>
+  }
+
+  <!-- Grid de marcas -->
+  @if (!loadingMakes() && !errorMakes()) {
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+      @for (make of makes(); track make.id) {
+        <button
+          hlmBtn
+          variant="outline"
+          (click)="openModal(make)"
+          class="flex h-20 flex-col items-center justify-center gap-1 rounded-xl transition-all hover:bg-muted hover:shadow-md"
+        >
+          <ng-icon hlm name="lucideCar" size="lg" class="text-primary" />
+          <span class="text-xs font-medium leading-tight text-center px-1">{{ make.name }}</span>
+        </button>
+      }
+    </div>
+  }
+
+</div>
+
+<!-- Modal overlay -->
+@if (selectedMake()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+    (click)="closeModal()"
+  >
+    <!-- Modal card — stopPropagation evita cerrar al clickear adentro -->
+    <div
+      class="relative flex max-h-[80vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-background shadow-2xl ring-1 ring-border"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Header -->
+      <div class="flex items-center justify-between border-b border-border px-6 py-4">
+        <div class="flex items-center gap-3">
+          <ng-icon hlm name="lucideCar" size="lg" class="text-primary" />
+          <div>
+            <h2 class="text-lg font-semibold text-foreground">{{ selectedMake()!.name }}</h2>
+            <p class="text-xs text-muted-foreground">
+              @if (loadingModels()) { Cargando modelos... }
+              @else { {{ models().length }} modelos disponibles }
+            </p>
+          </div>
+        </div>
+        <button hlmBtn variant="ghost" size="icon" (click)="closeModal()">
+          <ng-icon hlm name="lucideX" size="base" />
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="overflow-y-auto p-6">
+
+        @if (loadingModels()) {
+          <div class="flex justify-center py-8">
+            <ng-icon hlm name="lucideLoader" size="lg" class="animate-spin text-primary" />
+          </div>
+        } @else if (models().length === 0) {
+          <p class="text-center text-sm text-muted-foreground py-8">No se encontraron modelos.</p>
+        } @else {
+          <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            @for (model of models(); track model.id) {
+              <div
+                class="rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm font-medium text-foreground"
+              >
+                {{ model.name }}
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+
+      <!-- Footer -->
+      <div class="border-t border-border px-6 py-3">
+        <button hlmBtn variant="outline" class="w-full" (click)="closeModal()">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+}
