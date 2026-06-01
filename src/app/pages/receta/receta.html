@@ -1,0 +1,49 @@
+<section class="w-full">
+
+    <div class="mb-6">
+        <label class="mb-1.5 block text-sm font-medium text-foreground">Receta</label>
+        <input hlmInput type="string" [(ngModel)]="receta" placeholder="Ingresá la receta..." class="text-lg" />
+    </div>
+    <button hlmBtn (click)="buscar()">Buscar Receta</button>
+
+
+    <table class="p-4">
+        <thead>
+            <th class="p-2">
+                nombre
+            </th>
+            <th class="p-2">
+                description
+            </th>
+             <th class="p-2">
+                Imagen
+            </th>
+            <th class="p-2">Accion</th>
+               
+            
+        </thead>
+        <tbody>
+            @for (i of recetas(); track i) {
+            <tr class="border-2">
+                <td class="p-2">{{i.name}}</td>
+                <td class="p-2">{{i.description}}</td>
+                <td class="p-2">
+                    <ul>
+                        @for (ing of i.ingredients ; track ing) {
+                        <li>{{ing.name}}</li>
+                        }
+                    </ul>
+                </td>
+                <td> 
+                    <button  hlmBtn> Traducir</button>
+                </td>
+                
+            </tr>
+
+            }
+
+
+        </tbody>
+    </table>
+
+</section>

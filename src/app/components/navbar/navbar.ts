@@ -11,8 +11,8 @@ import {
   lucideX,
   lucideLayoutGrid,
 } from '@ng-icons/lucide';
-import { HlmButton } from '../../libs/button/src/lib/hlm-button';
-import { HlmIcon } from '../../libs/icon/src/lib/hlm-icon';
+import { HlmButton } from '../../../libs/button/src/lib/hlm-button';
+import { HlmIcon } from '../../../libs/icon/src/lib/hlm-icon';
 
 export const NAV_LINKS = [
   { label: 'Peliculas', path: '/peliculas', icon: 'lucideFilm' },
@@ -20,6 +20,7 @@ export const NAV_LINKS = [
   { label: 'Conversor', path: '/conversor', icon: 'lucideArrowLeftRight' },
   { label: 'Audio', path: '/audio', icon: 'lucideMusic' },
   { label: 'Otra Api', path: '/otra-api', icon: 'lucideGlobe' },
+  {label :"Recetas" , path:"/recetas", icon: 'lucideGlobe' }
 ] as const;
 
 @Component({

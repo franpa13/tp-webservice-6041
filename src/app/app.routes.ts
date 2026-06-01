@@ -21,5 +21,8 @@ export const routes: Routes = [
   {
     path: 'otra-api',
     loadComponent: () => import('./pages/otra-api/otra-api').then(m => m.OtraApiComponent),
+  },  {
+    path: 'recetas',
+    loadComponent: () => import('./pages/receta/receta').then(m => m.Receta),
   },
 ];
