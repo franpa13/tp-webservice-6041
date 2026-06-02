@@ -68,8 +68,14 @@
 
                     <!-- Body -->
                     <div class="overflow-y-auto p-6">
+                        @if (loading()) {
+                        <div class="flex justify-center py-8">
+                            <ng-icon hlm name="lucideLoader" size="lg" class="animate-spin text-primary" />
+                        </div>
+                        }@else {
 
                         <h2>{{traducido()}}</h2>
+                        }
 
                     </div>
 
