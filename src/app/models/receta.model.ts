@@ -88,5 +88,5 @@ export interface RecetaModel {
     servings: number
     servingSizes: Serving[]
     nutrients : Nutrients
-    image: "https://images.low-carb-recipes.com/36cdab2c-e2bd-47a8-a510-3fb733fb5e2c.png"
+    image: string
 }

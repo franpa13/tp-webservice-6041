@@ -15,18 +15,19 @@
             <th class="p-2">
                 description
             </th>
-             <th class="p-2">
+            <th class="p-2">
                 Imagen
             </th>
             <th class="p-2">Accion</th>
-               
-            
+
+
         </thead>
         <tbody>
             @for (i of recetas(); track i) {
             <tr class="border-2">
                 <td class="p-2">{{i.name}}</td>
                 <td class="p-2">{{i.description}}</td>
+                <td class="p-2"><img [src]="i.image" alt="{{i.name}}" class="w-24 h-24 object-cover rounded"></td>
                 <td class="p-2">
                     <ul>
                         @for (ing of i.ingredients ; track ing) {
@@ -34,15 +35,51 @@
                         }
                     </ul>
                 </td>
-                <td> 
-                    <button  hlmBtn> Traducir</button>
+                <td>
+                    <button (click)="traducir(i.description)" hlmBtn> Traducir</button>
                 </td>
-                
             </tr>
-
             }
 
 
+
+            @if (openModal()) {
+            <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+                (click)="closeModal()">
+                <!-- Modal card — stopPropagation evita cerrar al clickear adentro -->
+                <div class="relative flex max-h-[80vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-background shadow-2xl ring-1 ring-border"
+                    (click)="$event.stopPropagation()">
+                    <!-- Header -->
+                    <!-- <div class="flex items-center justify-between border-b border-border px-6 py-4">
+                        <div class="flex items-center gap-3">
+                   
+                            <div>
+                                <h2 class="text-lg font-semibold text-foreground">{{ selectedMake()!.name }}</h2>
+                                <p class="text-xs text-muted-foreground">
+                                    @if (loadingModels()) { Cargando modelos... }
+                                    @else { {{ models().length }} modelos disponibles }
+                                </p>
+                            </div>
+                        </div>
+                        <button hlmBtn variant="ghost" size="icon" (click)="closeModal()">
+                            <ng-icon hlm name="lucideX" size="base" />
+                        </button>
+                    </div> -->
+
+                    <!-- Body -->
+                    <div class="overflow-y-auto p-6">
+
+                        <h2>{{traducido()}}</h2>
+
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="border-t border-border px-6 py-3">
+                        <button hlmBtn variant="outline" class="w-full" (click)="closeModal()">Cerrar</button>
+                    </div>
+
+                </div>
+            </div>}
         </tbody>
     </table>
 
